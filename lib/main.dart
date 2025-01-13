@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/AppBar/appbar.dart';
+import 'package:flutter_application_1/House.dart';
+import 'package:json_theme/json_theme.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
+
+  final themeJson = jsonDecode(themeStr);
+
+  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
+  runApp(MyApp(theme: theme));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeData theme;
 
-  // This widget is the root of your application.
+  const MyApp({Key? key, required this.theme}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: theme, // Utilisation du thème passé en paramètre
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -56,6 +53,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int currentPageIndex = 1;
 
   void _incrementCounter() {
     setState(() {
@@ -78,13 +76,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text('Gestion des Albums'), // Titre de l'AppBar
+        backgroundColor: Colors.green,
+
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.lightbulb),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -120,6 +124,29 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: Icon(House.home), // Icône pour la page d'accueil
+            label: 'Accueil', // Label pour la page d'accueil
+          ),
+          NavigationDestination(
+            icon: Icon(House.note_beamed), // Icône pour la recherche
+            label: 'Liste des albums', // Label pour la recherche
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(House.settings), // Icône lorsque sélectionné
+            icon: Icon(House.settings), // Icône par défaut
+            label: 'Parametres', // Label pour les favoris
+          ),
+        ],
+      ),
     );
   }
 }
