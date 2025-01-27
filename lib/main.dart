@@ -15,8 +15,8 @@ Future<void> main() async {
 
   final themeStrDark =
       await rootBundle.loadString('assets/appainter_theme_dark.json');
-  final themeJsonDark = jsonDecode(themeStr);
-  final themeDark = ThemeDecoder.decodeThemeData(themeJson)!;
+  final themeJsonDark = jsonDecode(themeStrDark);
+  final themeDark = ThemeDecoder.decodeThemeData(themeJsonDark)!;
 
   runApp(MyApp(theme: theme, Darktheme: themeDark));
 }
