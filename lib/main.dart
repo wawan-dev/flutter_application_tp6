@@ -3,32 +3,45 @@ import 'package:flutter_application_1/AppBar/appbar.dart';
 import 'package:flutter_application_1/House.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:flutter/services.dart';
+import 'ThemeController.dart';
 import 'dart:convert';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
-
   final themeJson = jsonDecode(themeStr);
-
   final theme = ThemeDecoder.decodeThemeData(themeJson)!;
 
-  runApp(MyApp(theme: theme));
+  final themeStrDark =
+      await rootBundle.loadString('assets/appainter_theme_dark.json');
+  final themeJsonDark = jsonDecode(themeStr);
+  final themeDark = ThemeDecoder.decodeThemeData(themeJson)!;
+
+  runApp(MyApp(theme: theme, Darktheme: themeDark));
 }
 
 class MyApp extends StatelessWidget {
   final ThemeData theme;
-
-  const MyApp({Key? key, required this.theme}) : super(key: key);
+  final ThemeData Darktheme;
+  const MyApp({Key? key, required this.theme, required this.Darktheme})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: theme, // Utilisation du thème passé en paramètre
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeController,
+      builder: (context, themeMode, _) {
+        return MaterialApp(
+          title: 'Gestion des albums',
+          debugShowMaterialGrid: false,
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          darkTheme: Darktheme,
+          themeMode: themeMode,
+          home: const MyHomePage(title: "Page d'Accueil"),
+        );
+      },
     );
   }
 }
@@ -77,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Gestion des Albums'), // Titre de l'AppBar
-        backgroundColor: Colors.green,
 
         actions: <Widget>[
           IconButton(
@@ -86,7 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.lightbulb),
-            onPressed: () {},
+            onPressed: () {
+              themeController.toggleTheme();
+            },
           ),
         ],
       ),
@@ -94,19 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(

@@ -6,14 +6,16 @@ class AppBarPrincipal extends StatefulWidget implements PreferredSizeWidget {
   final String appBar = "Mon Application";
   final List<Widget> widget = [];
 
-  AppBarPrincipal({super.key});  // Le constructeur reste constant
+  AppBarPrincipal({super.key}); // Le constructeur reste constant
 
   // Implémentation correcte du `getter` preferredSize
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);  // Retourne la taille de l'AppBar
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight); // Retourne la taille de l'AppBar
 
   @override
-  _AppBarPrincipalState createState() => _AppBarPrincipalState();  // Crée l'état associé à ce widget
+  _AppBarPrincipalState createState() =>
+      _AppBarPrincipalState(); // Crée l'état associé à ce widget
 }
 
 // Classe _AppBarPrincipalState qui gère l'état du widget
@@ -21,15 +23,8 @@ class _AppBarPrincipalState extends State<AppBarPrincipal> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(widget.appBar),  // Utilisation de widget.appBar
-      actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            // Action à effectuer lors de l'appui sur l'icône
-          },
-          icon: Icon(Icons.search),
-        ),
-      ],
+      title: Text(widget.appBar), // Utilisation de widget.appBar
+      actions: <Widget>[],
     );
   }
 }
