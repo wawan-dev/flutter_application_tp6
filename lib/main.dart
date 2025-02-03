@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/AppBar/appbar.dart';
 import 'package:flutter_application_1/House.dart';
+import 'package:flutter_application_1/screen/home.dart';
+import 'package:flutter_application_1/screen/settings.dart';
 import 'package:json_theme/json_theme.dart';
 import 'package:flutter/services.dart';
 import 'ThemeController.dart';
@@ -88,66 +90,49 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Gestion des Albums'), // Titre de l'AppBar
+        appBar: AppBar(
+          title: Text('Gestion des Albums'), // Titre de l'AppBar
 
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.lightbulb),
-            onPressed: () {
-              themeController.toggleTheme();
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            IconButton(
+              icon: Icon(Icons.lightbulb),
+              onPressed: () {
+                themeController.toggleTheme();
+              },
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(House.home), // Icône pour la page d'accueil
-            label: 'Accueil', // Label pour la page d'accueil
-          ),
-          NavigationDestination(
-            icon: Icon(House.note_beamed), // Icône pour la recherche
-            label: 'Liste des albums', // Label pour la recherche
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(House.settings), // Icône lorsque sélectionné
-            icon: Icon(House.settings), // Icône par défaut
-            label: 'Parametres', // Label pour les favoris
-          ),
-        ],
-      ),
-    );
+        bottomNavigationBar: NavigationBar(
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+          },
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              icon: Icon(House.home), // Icône pour la page d'accueil
+              label: 'Accueil', // Label pour la page d'accueil
+            ),
+            NavigationDestination(
+              icon: Icon(House.note_beamed), // Icône pour la recherche
+              label: 'Liste des albums', // Label pour la recherche
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(House.settings), // Icône lorsque sélectionné
+              icon: Icon(House.settings), // Icône par défaut
+              label: 'Parametres', // Label pour les favoris
+            ),
+          ],
+        ),
+        body: <Widget>[
+          Home(),
+          Container(),
+          Setting(),
+        ][currentPageIndex]);
   }
 }
